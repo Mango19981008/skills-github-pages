@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物品查询</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 85%;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .nav button {
+            padding: 10px 20px;
+            margin: 0 5px 10px;
+            background-color: #3fbcc0;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .nav button:hover {
+            background-color: #2889a7;
+        }
+        .nav button.active {
+            background-color: #1c8fac;
+        }
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .item-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .item-image {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            /* background-color: #f0f0f0; */
+            border-radius: 4px;
+        }
+        /* 不同类别的图片背景色 */
+        .numA .item-image { background-color: rgba(151, 55, 57, 0.9); } /* 红色 */
+        .numB .item-image { background-color: rgba(180, 109, 65, 0.9); } /* 金色 */
+        .numC .item-image { background-color: rgba(89, 68, 123, 0.9); } /* 紫色 */
+        .numD .item-image { background-color: rgba(56, 91, 123, 0.9); } /* 蓝色 */
+        .numE .item-image { background-color: rgba(42, 202, 150, 0.9); } /* 绿色 */
+        .numF .item-image { background-color: #d4d4d4; } /* 白色 */
+        
+        .item-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .item-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .item-price {
+            color: #e53935;
+            font-weight: bold;
+        }
+        .category-title {
+            text-align: center;
+            margin: 20px 0;
+            color: #333;
+        }
+    </style>
+</head>
+ 
+<body>
+    <div class="container">
+        <h1></h1>
+        
+        <div class="nav">
+            <button class="active" onclick="showCategory('numA')">红色收集品</button>
+            <button onclick="showCategory('numB')">金色收集品</button>
+            <button onclick="showCategory('numC')">紫色收集品</button>
+            <button onclick="showCategory('numD')">蓝色收集品</button>
+            <button onclick="showCategory('numE')">绿色收集品</button>
+            <button onclick="showCategory('numF')">白色收集品</button>
+        </div>
+        
+        <h2 class="category-title" id="categoryTitle">红色收集品</h2>
+        
+        <div class="items-grid" id="itemsContainer">
+            <!-- items here -->
+        </div>
+    </div>
+</body>
+<script>
+    let numA = [ 
+        // 红
+            { label: '非洲之心', image: '15080050006.png', description: '收集品', price: '获取失败' },
+            { label: '超算单元', image: '15080050030.png', description: '收集品', price: '获取失败' },
+            { label: '军用信息终端', image: '15080050032.png', description: '收集品', price: '获取失败' },
+            { label: '坦克模型', image: '15080050040.png', description: '收集品', price: '获取失败' },
+            { label: '步战车模型', image: '15080050041.png', description: '收集品', price: '获取失败' },
+            { label: '滑膛枪展品', image: '15080050003.png', description: '收集品', price: '获取失败' },
+            { label: '实验数据', image: '15070040003.png', description: '收集品', price: '获取失败' },
+            { label: '万足金条', image: '15080050010.png', description: '收集品', price: '获取失败' },
+            { label: '奥莉薇娅香槟', image: '15060080015.png', description: '收集品', price: '获取失败' },
+            { label: '绝密服务器', image: '15080050044.png', description: '收集品', price: '获取失败' },
+            { label: '黄金瞪羚', image: '15010050001.png', description: '收集品', price: '获取失败' },
+            { label: '摄影机', image: '15030010012.png', description: '收集品', price: '获取失败' },
+            { label: '显卡', image: '15030050001.png', description: '收集品', price: '获取失败' },
+            { label: '军用无人机', image: '15030050002.png', description: '收集品', price: '获取失败' },
+            { label: '卫星通信天线', image: '15030050013.png', description: '收集品', price: '获取失败' },
+            { label: '强化碳纤维板', image: '15020010031.png', description: '收集品', price: '获取失败' },
+            { label: '笔记本电脑', image: '15030050007.png', description: '收集品', price: '获取失败' },
+            { label: '怀表', image: '15080050014.png', description: '收集品', price: '获取失败' },
+            { label: '棘龙爪化石', image: '15080040001.png', description: '收集品', price: '获取失败' },
+    ]
+    let numB = [ 
+        // 金
+            { label: '盒装挂耳咖啡', image: '15080050071.png', description: '收集品', price: '获取失败' },
+            { label: '可编程处理器', image: '15030050003.png', description: '收集品', price: '获取失败' },
+            { label: '卫队金扳指', image: '15080050092.png', description: '收集品', price: '获取失败' },
+            { label: '优秀雇员奖杯', image: '15080050093.png', description: '收集品', price: '获取失败' },
+            { label: '功绩勋章', image: '15080050004.png', description: '收集品', price: '获取失败' },
+            { label: '静脉定位器', image: '15060040001.png', description: '收集品', price: '获取失败' },
+            { label: '高速固态硬盘', image: '15080050090.png', description: '收集品', price: '获取失败' },
+            { label: '阵列服务器', image: '15080050062.png', description: '收集品', price: '获取失败' },
+            { label: '数码相机', image: '15030050006.png', description: '收集品', price: '获取失败' },
+            { label: '纯金打火机', image: '15080050002.png', description: '收集品', price: '获取失败' },
+            { label: '亮闪闪的海盗金币', image: '15080050009.png', description: '收集品', price: '获取失败' },
+            { label: '特色酒杯', image: '15080050015.png', description: '收集品', price: '获取失败' },
+            { label: '特色首饰', image: '15080050082.png', description: '收集品', price: '获取失败' },
+            { label: '座钟', image: '15080050083.png', description: '收集品', price: '获取失败' },
+            { label: '机械工蜂模型', image: '15090010040.png', description: '收集品', price: '获取失败' },
+            { label: '咖啡', image: '15060080014.png', description: '收集品', price: '获取失败' },
+    ]
+    let numC = [ 
+        // 紫 
+            { label: '固态硬盘', image: '15030040005.png', description: '收集品', price: '获取失败' },
+            { label: 'GS5 手柄', image: '15030050011.png', description: '收集品', price: '获取失败' },
+            { label: '内存条', image: '15030040006.png', description: '收集品', price: '获取失败' },
+            { label: '广角镜头', image: '15080050037.png', description: '收集品', price: '获取失败' },
+            { label: '信号棒', image: '15080050102.png', description: '收集品', price: '获取失败' },
+            { label: '海盗弯刀', image: '15080040002.png', description: '收集品', price: '获取失败' },
+            { label: '聚乙烯纤维', image: '15020050003.png', description: '收集品', price: '获取失败' },
+            { label: '间谍笔', image: '15040010015.png', description: '收集品', price: '获取失败' },
+            { label: '特色提灯', image: '15080050124.png', description: '收集品', price: '获取失败' },
+            { label: '电脑主板', image: '15030040007.png', description: '收集品', price: '获取失败' },
+            { label: '声卡', image: '15030050005.png', description: '收集品', price: '获取失败' },
+            { label: '军事情报', image: '15070050002.png', description: '收集品', price: '获取失败' },
+            { label: '犄角', image: '15080040003.png', description: '收集品', price: '获取失败' },
+            { label: '特色酒壶', image: '15080050016.png', description: '收集品', price: '获取失败' },
+            { label: '专业声卡', image: '15080050038.png', description: '收集品', price: '获取失败' },
+            { label: '仪典匕首', image: '15080050043.png', description: '收集品', price: '获取失败' },
+            { label: '加密路由器', image: '15080050045.png', description: '收集品', price: '获取失败' },
+            { label: '植物样本', image: '15080050119.png', description: '收集品', price: '获取失败' },
+            { label: '损坏的热像仪', image: '15040050003.png', description: '收集品', price: '获取失败' },
+            { label: '风情水壶', image: '15040010014.png', description: '收集品', price: '获取失败' },
+            { label: '黄金饰章', image: '15080050018.png', description: '收集品', price: '获取失败' },
+    ]
+    let numD = [ 
+        // 蓝
+            { label: '狩猎火柴', image: '15080050107.png', description: '收集品', price: '获取失败' },
+            { label: '纤维', image: '15020040002.png', description: '收集品', price: '获取失败' },
+            { label: '额温枪', image: '15060010004.png', description: '收集品', price: '获取失败' },
+            { label: '低级燃料', image: '15020010034.png', description: '收集品', price: '获取失败' },
+            { label: '继电器', image: '15020050008.png', description: '收集品', price: '获取失败' },
+            { label: '一桶漆', image: '15020010016.png', description: '收集品', price: '获取失败' },
+            { label: '军用移动电源', image: '15030010001.png', description: '收集品', price: '获取失败' },
+            { label: '摄像头', image: '15030040002.png', description: '收集品', price: '获取失败' },
+            { label: '转换插座', image: '15040010022.png', description: '收集品', price: '获取失败' },
+            { label: '医用酒精', image: '15060010007.png', description: '收集品', price: '获取失败' },
+            { label: 'U盘', image: '15070010001.png', description: '收集品', price: '获取失败' },
+            { label: '古怪的海盗银币', image: '15080050008.png', description: '收集品', price: '获取失败' },
+            { label: '存储卡', image: '15070010002.png', description: '收集品', price: '获取失败' },
+            { label: '古老的海盗望远镜', image: '15080050011.png', description: '收集品', price: '获取失败' },
+            { label: '电子温度计', image: '15080050039.png', description: '收集品', price: '获取失败' },
+            { label: '军情录音', image: '15080050096.png', description: '收集品', price: '获取失败' },
+            { label: '医疗无人机', image: '15090010041.png', description: '收集品', price: '获取失败' },
+            { label: '电子显微镜', image: '15080050116.png', description: '收集品', price: '获取失败' },
+            { label: '太阳能板', image: '15030050016.png', description: '收集品', price: '获取失败' },
+            { label: '起舞的女郎', image: '15080050012.png', description: '收集品', price: '获取失败' },
+            { label: '火药', image: '15040010017.png', description: '收集品', price: '获取失败' },
+            { label: '时尚周刊', image: '15080050021.png', description: '收集品', price: '获取失败' },
+    ]
+    let numE = [ 
+        // 绿
+            { label:'电火机', image: '15010010013.png', description: '收集品', price: '获取失败'  },
+            { label:'迷你氢电池', image: '15010010015.png', description: '收集品', price: '获取失败'  },
+            { label:'螺丝刀', image: '15020010005.png', description: '收集品', price: '获取失败'  },
+            { label:'原木木板', image: '15020010008.png', description: '收集品', price: '获取失败'  },
+            { label:'电线', image: '15020010012.png', description: '收集品', price: '获取失败'  },
+            { label:'便携液压扳手', image: '15020010017.png', description: '收集品', price: '获取失败'  },
+            { label:'尖嘴钳', image: '15020010019.png', description: '收集品', price: '获取失败'  },
+            { label:'电笔', image: '15020010020.png', description: '收集品', price: '获取失败'  },
+            { label:'角磨机', image: '15020010021.png', description: '收集品', price: '获取失败'  },
+            { label:'波纹软管', image: '15020010026.png', description: '收集品', price: '获取失败'  },
+            { label:'温度计', image: '15020010027.png', description: '收集品', price: '获取失败'  },
+            { label:'喷漆', image: '15020010030.png', description: '收集品', price: '获取失败'  },
+            { label:'LED灯管', image: '15020010032.png', description: '收集品', price: '获取失败'  },
+            { label:'压力计', image: '15020040003.png', description: '收集品', price: '获取失败'  },
+            { label:'水平仪', image: '15020040004.png', description: '收集品', price: '获取失败'  },
+            { label:'电容', image: '15020050007.png', description: '收集品', price: '获取失败'  },
+            { label:'手机电池', image: '15030010002.png', description: '收集品', price: '获取失败'  },
+            { label:'DVD光驱', image: '15030010007.png', description: '收集品', price: '获取失败'  },
+            { label:'电源', image: '15030010011.png', description: '收集品', price: '获取失败'  },
+            { label:'印刷电路板', image: '15030010013.png', description: '收集品', price: '获取失败'  },
+            { label:'键盘', image: '15030010014.png', description: '收集品', price: '获取失败'  },
+            { label:'风冷散热器', image: '15030010018.png', description: '收集品', price: '获取失败'  },
+            { label:'机械硬盘', image: '15030010019.png', description: '收集品', price: '获取失败'  },
+            { label:'插座', image: '15040010012.png', description: '收集品', price: '获取失败'  },
+            { label:'超高频读卡器', image: '15030040011.png', description: '收集品', price: '获取失败'  },
+            { label:'盐溶液', image: '15060010001.png', description: '收集品', price: '获取失败'  },
+            { label:'手术镊子', image: '15060010002.png', description: '收集品', price: '获取失败'  },
+            { label:'小药瓶', image: '15060010003.png', description: '收集品', price: '获取失败'  },
+            { label:'注射器', image: '15060010010.png', description: '收集品', price: '获取失败'  },
+            { label:'输液工具', image: '15060010012.png', description: '收集品', price: '获取失败'  },
+            { label:'锈迹斑斑的海盗铜币', image: '15080050007.png', description: '收集品', price: '获取失败'  },
+            { label:'太阳碟', image: '15080010004.png', description: '收集品', price: '获取失败'  },
+            { label:'特色陶瓷', image: '15080050017.png', description: '收集品', price: '获取失败'  },
+            { label:'残弹挂坠', image: '15080040004.png', description: '收集品', price: '获取失败'  },
+            { label:'建筑图纸1号', image: '15070010005.png', description: '收集品', price: '获取失败'  },
+            { label:'建筑图纸2号', image: '15070010006.png', description: '收集品', price: '获取失败'  },
+            { label:'建筑图纸3号', image: '15070010007.png', description: '收集品', price: '获取失败'  },
+            { label:'建筑图纸4号', image: '15070010008.png', description: '收集品', price: '获取失败'  },
+            { label:'建筑图纸5号', image: '15070010009.png', description: '收集品', price: '获取失败'  },
+            { label:'新闻周刊', image: '15080050020.png', description: '收集品', price: '获取失败'  },
+            { label:'电池', image: '15080050111.png', description: '收集品', price: '获取失败'  },
+            { label:'强力胶', image: '15080050080.png', description: '收集品', price: '获取失败'  },
+            { label:'手锯', image: '15080050087.png', description: '收集品', price: '获取失败'  },
+    ]
+    let numF = [ 
+        // 白
+            { label:'含氟牙膏', image: '15010010004.png', description:'收集品', price: '获取失败' },
+            { label:'火柴', image: '15010010008.png', description:'收集品', price: '获取失败' },
+            { label:'精密工具组', image: '15020010001.png', description:'收集品', price: '获取失败' },
+            { label:'防水胶布', image: '15020010002.png', description:'收集品', price: '获取失败' },
+            { label:'布基胶带', image: '15020010003.png', description:'收集品', price: '获取失败' },
+            { label:'油漆刷', image: '15020010004.png', description:'收集品', price: '获取失败' },
+            { label:'工具刀', image: '15020010006.png', description:'收集品', price: '获取失败' },
+            { label:'音波测距卷尺', image: '15020010010.png', description:'收集品', price: '获取失败' },
+            { label:'直角尺', image: '15020010014.png', description:'收集品', price: '获取失败' },
+            { label:'鼠标', image: '15030010009.png', description:'收集品', price: '获取失败' },
+            { label:'网线', image: '15040010016.png', description:'收集品', price: '获取失败' },
+            { label:'手术剪刀', image: '15060010008.png', description:'收集品', price: '获取失败' },
+            { label:'外科手套', image: '15060010009.png', description:'收集品', price: '获取失败' },
+            { label:'酸奶', image: '15060080002.png', description:'收集品', price: '获取失败' },
+            { label:'蛋白粉', image: '15060080003.png', description:'收集品', price: '获取失败' },
+            { label:'羊角锤', image: '15080050085.png', description:'收集品', price: '获取失败' },
+            { label:'一盒钉子', image: '15080050086.png', description:'收集品', price: '获取失败' },
+            { label:'样本试管', image: '15090010077.png', description:'收集品', price: '获取失败' },
+            { label:'军情照片', image: '15090010024.png', description:'收集品', price: '获取失败' },
+            { label:'人像照片', image: '15090010026.png', description:'收集品', price: '获取失败' },
+            { label:'物流信息单', image: '15090910019.png', description:'收集品', price: '获取失败' },
+            { label:'当地小报', image: '15090910016.png', description:'收集品', price: '获取失败' },
+            { label:'盒装蜡烛', image: '15080050112.png', description:'收集品', price: '获取失败' },
+            { label:'资料残页', image: '15080050056.png', description:'收集品', price: '获取失败' },
+            { label:'简易注射器', image: '14020000001.png', description:'收集品', price: '获取失败' },
+
+    ];
+    const categoryTitles = {
+            'numA': '红色收集品',
+            'numB': '金色收集品',
+            'numC': '紫色收集品',
+            'numD': '蓝色收集品',
+            'numE': '绿色收集品',
+            'numF': '白色收集品'
+        };
+         
+        // Category titles and colors
+        const categoryInfo = {
+            'numA': { title: '红色收集品', color: 'rgba(151, 55, 57, 0.9)' },
+            'numB': { title: '金色收集品', color: '#ffd700' },
+            'numC': { title: '紫色收集品', color: '#b266ff' },
+            'numD': { title: '蓝色收集品', color: '#4da6ff' },
+            'numE': { title: '绿色收集品', color: '#70db70' },
+            'numF': { title: '白色收集品', color: '#d4d4d4' }
+        };
+        
+        let currentCategory = 'numA';
+        
+        // Initial render
+        document.addEventListener('DOMContentLoaded', function() {
+            renderItems(numA, 'numA');
+        });
+        
+        // Render items to the page
+        function renderItems(items, category) {
+            const container = document.getElementById('itemsContainer');
+            container.innerHTML = '';
+            
+            // Remove all category classes
+            container.className = 'items-grid';
+            // Add current category class
+            container.classList.add(category);
+            
+            items.forEach(item => {
+                const itemCard = document.createElement('div');
+                itemCard.className = 'item-card';
+                
+                itemCard.innerHTML = `
+                    <img src="img/${item.image}" alt="${item.label}" class="item-image" onerror="this.style.display='none'">
+                    <div class="item-label">${item.label}</div>
+                    <div class="item-description">${item.description}</div>
+                    <div class="item-price">价格：${item.price}</div>
+                `;
+                
+                container.appendChild(itemCard);
+            });
+        }
+        
+        // Show selected category
+        function showCategory(category) {
+            currentCategory = category;
+            
+            // Update active button
+            document.querySelectorAll('.nav button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update title
+            document.getElementById('categoryTitle').textContent = categoryInfo[category].title;
+            
+            // Render items
+            switch(category) {
+                case 'numA':
+                    renderItems(numA, 'numA');
+                    break;
+                case 'numB':
+                    renderItems(numB, 'numB');
+                    break;
+                case 'numC':
+                    renderItems(numC, 'numC');
+                    break;
+                case 'numD':
+                    renderItems(numD, 'numD');
+                    break;
+                case 'numE':
+                    renderItems(numE, 'numE');
+                    break;
+                case 'numF':
+                    renderItems(numF, 'numF');
+                    break;
+            }
+        }
+</script>
+</html>
